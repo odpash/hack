@@ -13,9 +13,12 @@ class Term:
     def __init__(self, regex):
         self.regex = regex
 
-    # "X Y" -> X Y
+    # "X Y" -> \bX Y\b
     def op_quote(self):
-        return Term(self.regex.translate(quote_symbols))
+        s = self.regex
+        for q in quote_symbols:
+            s = s.replace(q, '')
+        return Term(f'\\b{s}\\b')
 
     # X and Y -> (?=.*X)(?=.*Y).*
     def op_and(self, other, n=None):
@@ -99,12 +102,17 @@ def is_normalized(string):
 def join_term(terms, ops):
     offset = 0
 
+    # print(ops)
+    # print(list(Operations))
+
     for operation in Operations:
         for i, op in enumerate(ops):
             if op.op is operation:
                 terms[i - offset] = terms[i - offset].invoke_by_op(operation, terms[i - offset + 1], op.arg)
                 terms.pop(i - offset + 1)
-                offset += 1
+                if len(terms) != i - offset + 1:
+                    offset += 1
+                print(terms)
 
     return terms[0].regex
 
@@ -126,15 +134,28 @@ def parse_string(string):
         if op:
             ops.append(op)
         else:
-            term = Term(word).op_quote()
-            if '+' in word:
+            term = Term(word)
+            if any(q in word for q in quote_symbols):
+                term = term.op_quote()
+            elif '+' in word:
                 term = term.op_plus()
 
             terms.append(term)
 
     return join_term(terms, ops)
 
-test_company_names = '''increase
+
+def get_companies_by_query(query, companies, **kwargs):
+    result = []
+    regex = parse_string(query)
+    for company in companies:
+        if re.search(regex, company['company_name']):
+            result.append(company)
+
+    return result
+
+
+company_list = '''increase
 increasing
 increment
 decreasing increasing lala
@@ -151,12 +172,15 @@ fuck incr incr aaa
 fracture height restriction
 restriction of fracture height
 restriction due to fracture height
-fracture height'''
+fracture height'''.splitlines()
+
+
+def generate_test_companies():
+    return [{'company_name': s} for s in company_list]
 
 
 if __name__ == '__main__':
+    test_companies = generate_test_companies()
     while True:
         cmd = input()
-        result_regex = parse_string(cmd)
-        print(result_regex)
-        print(re.findall(result_regex, test_company_names))
+        print(get_companies_by_query(cmd, test_companies))
