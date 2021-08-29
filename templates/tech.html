@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+{#{% import "macros/_patination.html" as page_macros %}#}
+
+{#<link rel="stylesheet" href="/static/style.css" type="text/css">#}
+
+{% block content %}
+
+<div class="container" align="center">
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ search_form.hidden_tag() }}
+        <div class="row align-items-center">
+            <div class="col">
+                {{ search_form.search_box(style="font-size: 24px; width: 100%") }}
+            </div>
+            <div class="col col-md-auto">
+                {{ search_form.search_btn(class_="btn btn-primary", style="width: 100%") }}
+            </div>
+        </div>
+    </form>
+</div>
+
+<div style="text-align: center; margin-top: 16px">
+    Найдено технологий: {{ results|length }}
+</div>
+    {% for result in results %}
+        <div class="card" style="padding: 16px; margin-top: 8px">
+            <h5> {{ result[1] }} </h5>
+            <a data-toggle="collapse" href="#card{{loop.index0}}" role="button" aria-expanded="false" aria-controls="card{{loop.index0}}">Подробнее</a>
+            <div class="collapse" id="card{{loop.index0}}">
+                {{ result[2]|safe }}
+                <div class="row align-items-start">
+                    <div class="col">
+                        <h6>Авторы:</h6>
+                        {{ result[3]|safe}}
+                    </div>
+                    <div class="col">
+                        <h6>Патентообладатели:</h6>
+                        {{ result[4]|safe}}
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <a href="{{result[0]}}">Смотреть на <b>Яндекс.Патент</b></a>
+                    </div>
+                    <div class="col">
+                        <a href="/contacts/{{result[4]}}">Найти контакты</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

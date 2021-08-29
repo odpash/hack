@@ -1,3 +1,4 @@
+import json
 import re
 from functools import reduce
 
@@ -7,6 +8,7 @@ from enum import Enum
 
 
 quote_symbols = '«»"\''
+P_LINK, P_TITLE, P_DESCR, P_AUTHOR, P_OWNER, P_YEAR = range(6)
 
 
 class Term:
@@ -79,6 +81,30 @@ class Operations(Enum):
     OR = 4
 
 
+with open('okved_groups.json', encoding='utf8') as file:
+    groups = json.loads(file.read())
+    categories = list(groups.keys())
+    classes = []
+    subclasses = []
+    for c in categories:
+        for d in groups[c]:
+            for cl in d:
+                classes.append(cl)
+                for scl in d[cl]:
+                    subclasses.append(scl)
+
+    classes_sub = '\n'.join(classes)
+    subclasses_sub = '\n'.join(subclasses)
+
+
+def is_okved(regex):
+    if re.search(regex, classes_sub, re.IGNORECASE):
+        return 1
+    elif re.search(regex, subclasses_sub, re.IGNORECASE):
+        return 2
+    return 0
+
+
 def get_op(string):
     if string == 'and':
         return Operation(Operations.AND)
@@ -112,7 +138,6 @@ def join_term(terms, ops):
                 terms.pop(i - offset + 1)
                 if len(terms) != i - offset + 1:
                     offset += 1
-                print(terms)
 
     return terms[0].regex
 
@@ -145,12 +170,28 @@ def parse_string(string):
     return join_term(terms, ops)
 
 
-def get_companies_by_query(query, companies, **kwargs):
+def get_companies_by_query(query, companies):
     result = []
     regex = parse_string(query)
+    check_okved = is_okved(regex)
     for company in companies:
-        if re.search(regex, company['company_name']):
+        if re.search(regex, company['company_name'], re.IGNORECASE):
             result.append(company)
+        # Дополнительно по ОКВЭД'ам
+        elif check_okved:
+            for num, name in company['activity']:
+                if re.search(regex, name, re.IGNORECASE):
+                    result.append(company)
+
+    return result
+
+
+def get_patents_by_query(query, patents):
+    result = []
+    regex = parse_string(query)
+    for patent in patents:
+        if re.search(regex, patent[P_TITLE], re.IGNORECASE) or re.search(regex, patent[P_DESCR], re.IGNORECASE):
+            result.append(patent)
 
     return result
 

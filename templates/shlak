@@ -1,0 +1,45 @@
+<!--        <div class="row align-items-center" style="margin-top: 8px">-->
+<!--            <div class="col-sm">-->
+<!--                {{ search_form.search_category.label }}-->
+<!--                {{ search_form.search_category(style="width: 100%") }}-->
+<!--            </div>-->
+<!--            <div class="col-sm">-->
+<!--                {{ search_form.search_class.label }}-->
+<!--                {{ search_form.search_class(style="width: 100%") }}-->
+<!--            </div>-->
+<!--            <div class="col-sm">-->
+<!--                {{ search_form.search_subclass.label }}-->
+<!--                {{ search_form.search_subclass(style="width: 100%") }}-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        {% set science = [search_form.search_science, search_form.search_expenses, search_form.search_investment, search_form.search_fund] %}-->
+<!--        <div class="row align-items-end" style="margin-top: 8px">-->
+<!--            {% for form in science %}-->
+<!--                <div class="col-sm">-->
+<!--                {{ form.label }} <br>-->
+<!--                {{ form }}-->
+<!--            </div>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+
+<!--        {% set common = [search_form.search_registration, search_form.search_capital] %}-->
+<!--        <div class="row align-items-center" style="margin-top: 8px">-->
+<!--            <div class="col-sm">-->
+<!--                {{ search_form.search_registration.label }} <br>-->
+<!--                {{ search_form.search_registration.box_from(style="width: 25%") }}-->
+<!--                - -->
+<!--                {{ search_form.search_registration.box_to(style="width: 25%") }}-->
+<!--            </div>-->
+<!--            <div class="col-sm">-->
+<!--                {{ search_form.search_capital.label }} <br>-->
+<!--                {{ search_form.search_capital.box_from(style="width: 40%") }}-->
+<!--                - -->
+<!--                {{ search_form.search_capital.box_to(style="width: 40%") }}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {% for error in search_form.errors %}-->
+<!--            <div class="alert alert-danger" role="alert">-->
+<!--                {{ error.message }}-->
+<!--            </div>-->
+<!--        {% endfor %}-->
