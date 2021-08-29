@@ -26,13 +26,11 @@ def tech():
         # search_results = db_searcher.search_patents(query)
         search_results = online_searcher.get_patents(query)
 
-    return render_template('tech.html', title=APP_NAME, search_form=search_form, results=search_results, contacts='')
+    return render_template('tech.html', title=APP_NAME, search_form=search_form, results=search_results)
 
 
 @app.route('/contacts/<name>')
 def get_contacts(name):
-    print(name)
-    name = re.sub(r'<.*?>', '', name)
     print(name)
     names = name.split('<br>')
     infos = []
