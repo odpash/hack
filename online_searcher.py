@@ -72,7 +72,6 @@ def get_patents(name):
             patent['description'] = re.sub(r'<img.*">', '[img]', patent['description'])
             # Замена компаний на ссылки в list-org
             # patent['owner'] = '<br>'.join([f'<a href="{get_listorg_link(face)}">{face}</a>' for face in patent['owner'].split('<br>')])
-
             results.append([patent['link'], patent['title'], patent['description'], patent['author'], patent['owner'], patent['year']])
 
         return results
