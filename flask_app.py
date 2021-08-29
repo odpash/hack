@@ -1,6 +1,6 @@
 import re
 
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField
@@ -18,6 +18,8 @@ bootstrap = Bootstrap(app)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/tech', methods=['GET', 'POST'])
 def tech():
+    flash('Hello!')
+
     search_form = TechSearchForm()
     search_results = []
 
@@ -31,12 +33,11 @@ def tech():
 
 @app.route('/contacts/<name>')
 def get_contacts(name):
-    print(name)
     names = name.split('<br>')
     infos = []
     for n in names:
-        infos.append(f'<b>{n}</b>:<br>{list_org_parser.get_contacts(list_org_parser.get_link(n))}')
-    return '<br>'.join(infos).replace('\n', '<br>')
+        infos.append(f'{n}\n{list_org_parser.get_contacts(list_org_parser.get_link(n))}')
+    return '\n' + '\n\n'.join(infos).replace('<br>', '\n')
 
 
 class TechSearchForm(FlaskForm):

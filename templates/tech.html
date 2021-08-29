@@ -40,16 +40,37 @@
                         {{ result[4]|safe}}
                     </div>
                 </div>
-                <div class="row align-items-center">
+                <div style="margin-top: 8px" class="row align-items-center">
                     <div class="col">
-                        <a href="{{result[0]}}">Смотреть на <b>Яндекс.Патент</b></a>
+                        <a style="width: 100%" class="btn btn-outline-primary" href="{{result[0]}}">Смотреть на <b>Яндекс.Патент</b></a>
                     </div>
                     <div class="col">
-                        <a href="/contacts/{{result[4]}}">Найти контакты</a>
+                        <button style="width: 100%" id="{{loop.index0}}" class="btn btn-outline-primary" value="{{result[4]}}">Показать контакты</button>
                     </div>
                 </div>
+                <p id="contacts{{loop.index0}}"></p>
             </div>
         </div>
     {% endfor %}
 </div>
+
+<script>
+    addEventListener("DOMContentLoaded", function() {
+      var commandButtons = document.querySelectorAll(".btn.btn-outline-primary");
+      for (var i=0, l=commandButtons.length; i<l; i++) {
+        var button = commandButtons[i];
+        button.addEventListener("click", function(e) {
+          e.preventDefault();
+          var clickedButton = e.target;
+          var command = clickedButton.value;
+          var request = new XMLHttpRequest();
+          request.onload = function() {
+              document.getElementById("contacts" + clickedButton.id).innerText = request.responseText;
+          };
+          request.open("GET", "/contacts/" + command, true);
+          request.send();
+        });
+      }
+    }, true);
+</script>
 {% endblock %}
