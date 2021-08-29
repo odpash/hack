@@ -69,7 +69,7 @@ def get_patents(name):
             # Заголовок капсом
             patent['title'] = patent['title'].upper()
             # Замена картинок на [img]
-            patent['description'] = re.sub(r'<img.*">', '[img]', patent['description'])
+            patent['description'] = re.sub(r'<img.*">', '', patent['description'])
             # Замена компаний на ссылки в list-org
             # patent['owner'] = '<br>'.join([f'<a href="{get_listorg_link(face)}">{face}</a>' for face in patent['owner'].split('<br>')])
             results.append([patent['link'], patent['title'], patent['description'], patent['author'], patent['owner'], patent['year']])
